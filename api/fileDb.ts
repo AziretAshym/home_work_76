@@ -9,6 +9,12 @@ let data: Message[] = [];
 const fileDb = {
     async init() {
         try {
+            await fs.access(fileName);
+        } catch {
+            await fs.writeFile(fileName, JSON.stringify([]));
+        }
+
+        try {
             const fileContent = await fs.readFile(fileName);
             data = JSON.parse(fileContent.toString());
         } catch (e) {
@@ -20,6 +26,7 @@ const fileDb = {
         const date = new Date().toISOString();
         const message = {id, ...msg, date};
         data.push(message);
+        await fs.writeFile(fileName, JSON.stringify(data));
         await this.save;
         return message;
     },
