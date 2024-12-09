@@ -11,7 +11,7 @@ const MessagesList: React.FC<IMessagesList> = ({messages}) => {
 
   return (
     <Container>
-      {messages.map((message) => (
+      {messages.slice(-30).map((message) => (
        <OneMessage key={message.id} message={message} />
       ))}
     </Container>

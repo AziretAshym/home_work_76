@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import React, { useState } from 'react';
 import { useAppDispatch } from '../app/hooks.ts';
 import { addMessage, fetchMessages } from '../store/thunks/messagesThunks.ts';
+import { useNavigate } from 'react-router-dom';
 
 const MessageForm = () => {
 
@@ -12,6 +13,7 @@ const MessageForm = () => {
   };
 
   const [form, setForm] = useState(initialState);
+  const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
 
@@ -28,6 +30,7 @@ const MessageForm = () => {
     await dispatch(addMessage({author: form.author, message: form.message}));
 
     setForm(initialState);
+    navigate('/');
 
     await dispatch(fetchMessages());
 
