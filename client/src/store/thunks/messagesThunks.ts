@@ -9,3 +9,16 @@ export const fetchMessages = createAsyncThunk(
     return response.data;
   }
 );
+
+
+export const addMessage = createAsyncThunk(
+  'messages/addMessage',
+  async (message: Omit<IMessage, 'id' | 'datetime'>) => {
+    try {
+      const response = await axiosApi.post<IMessage>('/messages', message);
+      return response.data;
+    } catch (e) {
+      console.error(e)
+    }
+  }
+);

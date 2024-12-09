@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchMessages } from '../thunks/messagesThunks';
+import { addMessage, fetchMessages } from '../thunks/messagesThunks';
 import { IMessage } from '../../types';
 
 interface MessagesState {
@@ -33,7 +33,22 @@ export const messagesSlice = createSlice({
       })
       .addCase(fetchMessages.rejected, (state) => {
         state.loadings.fetching = false;
-      });
+      })
+
+
+      .addCase(addMessage.pending, (state) => {
+        state.loadings.add = true;
+      })
+      .addCase(addMessage.fulfilled, (state, action) => {
+        state.loadings.add = false;
+        if (action.payload) {
+          state.messages.push(action.payload);
+        }
+      })
+      .addCase(addMessage.rejected, (state) => {
+        state.loadings.add = false;
+      })
+
   },
 });
 
