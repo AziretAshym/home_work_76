@@ -4,8 +4,11 @@ import axiosApi from '../../AxiosApi.ts';
 
 export const fetchMessages = createAsyncThunk(
   'messages/fetchMessages',
-  async () => {
-    const response = await axiosApi.get<IMessage[]>('/messages');
+
+  async (date?: string) => {
+    const url = date ? `/messages?datetime=${date}` : '/messages';
+    const response = await axiosApi.get<IMessage[]>(url);
+
     return response.data;
   }
 );

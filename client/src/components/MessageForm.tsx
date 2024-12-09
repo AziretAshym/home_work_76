@@ -1,9 +1,10 @@
 import { Container, FormControl, InputLabel, OutlinedInput, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import React, { useState } from 'react';
-import { useAppDispatch } from '../app/hooks.ts';
+import { useAppDispatch, useAppSelector } from '../app/hooks.ts';
 import { addMessage, fetchMessages } from '../store/thunks/messagesThunks.ts';
 import { useNavigate } from 'react-router-dom';
+import Loader from './UI/Loader.tsx';
 
 const MessageForm = () => {
 
@@ -36,34 +37,40 @@ const MessageForm = () => {
 
   };
 
+  const addLoading = useAppSelector((state) => state.messages.loadings.add);
+
   return (
     <>
-      <Typography variant={"h3"} sx={{textAlign: "center", fontWeight: "500", mb: "50px"}}>Add new message</Typography>
-      <Container>
-        <form onSubmit={onSubmit} style={{display: 'flex', flexDirection: 'column', marginLeft: 'auto', marginRight: 'auto', width:'60%', gap: "30px"}}>
-          <FormControl>
-            <InputLabel htmlFor="author">Enter your name</InputLabel>
-            <OutlinedInput
-              id="author"
-              name={"author"}
-              value={form.author}
-              onChange={changeInput}
-            />
-          </FormControl>
+      {addLoading ? (<Loader />) : (
+        <>
+          <Typography variant={'h3'} sx={{textAlign: 'center', fontWeight: '500', mb: '50px'}}>Add new message</Typography>
+          <Container>
+            <form onSubmit={onSubmit} style={{display: 'flex', flexDirection: 'column', marginLeft: 'auto', marginRight: 'auto', width:'60%', gap: "30px"}}>
+              <FormControl>
+                <InputLabel htmlFor="author">Enter your name</InputLabel>
+                <OutlinedInput
+                  id="author"
+                  name={"author"}
+                  value={form.author}
+                  onChange={changeInput}
+                />
+              </FormControl>
 
-          <FormControl>
-            <InputLabel htmlFor="message">Your message</InputLabel>
-            <OutlinedInput
-              id="message"
-              name={"message"}
-              value={form.message}
-              onChange={changeInput}
-            />
-          </FormControl>
+              <FormControl>
+                <InputLabel htmlFor="message">Your message</InputLabel>
+                <OutlinedInput
+                  id="message"
+                  name={"message"}
+                  value={form.message}
+                  onChange={changeInput}
+                />
+              </FormControl>
 
-          <Button variant="contained" type={"submit"}>Contained</Button>
-        </form>
-      </Container>
+              <Button variant="contained" type={"submit"} disabled={addLoading}>Contained</Button>
+            </form>
+          </Container>
+        </>
+      )}
     </>
   );
 };

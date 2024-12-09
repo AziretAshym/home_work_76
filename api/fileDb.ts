@@ -1,7 +1,6 @@
 import { promises as fs } from 'fs';
-import {Message, MessageWithoutId} from "./types";
+import { Message, MessageWithoutId } from "./types";
 import crypto from 'crypto';
-
 
 const fileName = "db.json";
 let data: Message[] = [];
@@ -21,20 +20,26 @@ const fileDb = {
             console.error(e);
         }
     },
-    async addMessage(msg: MessageWithoutId) {
+
+    async addMessage(msg: MessageWithoutId): Promise<Message> {
         const id = crypto.randomUUID();
-        const date = new Date().toISOString();
-        const message = {id, ...msg, date};
+        const datetime = new Date().toISOString();
+        const message: Message = { id, ...msg, datetime };
         data.push(message);
-        await fs.writeFile(fileName, JSON.stringify(data));
-        await this.save;
+        await this.save();
         return message;
     },
-    async getMessages() {
+
+    async getMessages(): Promise<Message[]> {
         return data;
     },
+
     async save() {
-        return fs.writeFile(fileName, JSON.stringify(data));
+        try {
+            await fs.writeFile(fileName, JSON.stringify(data, null, 2));
+        } catch (e) {
+            console.error(e);
+        }
     }
 };
 

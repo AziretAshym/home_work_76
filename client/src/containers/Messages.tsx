@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { fetchMessages } from '../store/thunks/messagesThunks.ts';
 import MessagesList from '../components/MessagesList.tsx';
 import MessageForm from '../components/MessageForm.tsx';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { Typography } from '@mui/material';
 
 const Messages = () => {
@@ -11,14 +11,19 @@ const Messages = () => {
 
   const {messages} = useAppSelector((state) => state.messages);
 
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const date = queryParams.get('datetime') || '';
+
   useEffect(() => {
-    dispatch(fetchMessages());
-  }, [dispatch]);
+    dispatch(fetchMessages(date));
+  }, [date, dispatch]);
 
   return (
     <>
       <Routes>
         <Route path="/" element={<MessagesList messages={messages} />} />
+        <Route path="/messages" element={<MessagesList messages={messages} />} />
         <Route path="/add-message" element={<MessageForm />} />
         <Route path="*" element={<Typography variant={"h1"} textAlign={"center"} fontWeight={600}>Not Found 404</Typography>} />
       </Routes>
